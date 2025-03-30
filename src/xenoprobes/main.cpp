@@ -58,6 +58,10 @@ po::variables_map parseOptions(int argc, const char **argv,
       "How important is Revenue (cash output.)")(
       "productionweight", po::value<float>()->default_value(1),
       "How important is Production (Miranium output.)")(
+      "oremultiplier", po::value<float>()->default_value(1),
+      "Multiplier to the production value when a node provides an ore.")(
+      "requireores", po::bool_switch()->default_value(false),
+      "Prevent solutions without all ores")(
       "iterations", po::value<size_t>()->default_value(2000),
       "How many iterations to run.")(
       "offsprings,o", po::value<size_t>()->default_value(100),
@@ -81,6 +85,8 @@ po::variables_map parseOptions(int argc, const char **argv,
   optimizer.setStorageWeight(vm["storageweight"].as<float>());
   optimizer.setRevenueWeight(vm["revenueweight"].as<float>());
   optimizer.setProductionWeight(vm["productionweight"].as<float>());
+  optimizer.setOreMultiplier(vm["oremultiplier"].as<float>());
+  optimizer.setRequireOres(vm["requireores"].as<bool>());
   optimizer.setMaxIterations(vm["iterations"].as<size_t>());
   optimizer.setNumOffsprings(vm["offsprings"].as<size_t>());
   optimizer.setMutationRate(vm["mutation"].as<float>());

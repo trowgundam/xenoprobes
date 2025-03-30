@@ -22,6 +22,8 @@ public:
         usedProbes_(other.usedProbes_), setupDirty_(other.setupDirty_.load()),
         setup_(other.setup_), storage_weight_(other.storage_weight_),
         production_weight_(other.production_weight_),
+        ore_multiplier_(other.ore_multiplier_),
+        require_ores_(other.require_ores_),
         revenue_weight_(other.revenue_weight_) {}
   ProbeArrangement(ProbeArrangement &&other) noexcept
       : probes_(std::move(other.probes_)),
@@ -30,6 +32,8 @@ public:
         setupDirty_(other.setupDirty_.load()), setup_(std::move(other.setup_)),
         storage_weight_(other.storage_weight_),
         production_weight_(other.production_weight_),
+        ore_multiplier_(other.ore_multiplier_),
+        require_ores_(other.require_ores_),
         revenue_weight_(other.revenue_weight_) {}
   ProbeArrangement &operator=(const ProbeArrangement &other) {
     if (this == &other)
@@ -41,6 +45,8 @@ public:
     setup_ = other.setup_;
     storage_weight_ = other.storage_weight_;
     production_weight_ = other.production_weight_;
+    ore_multiplier_ = other.ore_multiplier_;
+    require_ores_ = other.require_ores_;
     revenue_weight_ = other.revenue_weight_;
     return *this;
   }
@@ -54,6 +60,8 @@ public:
     setup_ = std::move(other.setup_);
     storage_weight_ = other.storage_weight_;
     production_weight_ = other.production_weight_;
+    ore_multiplier_ = other.ore_multiplier_;
+    require_ores_ = other.require_ores_;
     revenue_weight_ = other.revenue_weight_;
     return *this;
   }
@@ -80,6 +88,10 @@ public:
   void setProductionWeight(double production_weight);
   double getRevenueWeight() const;
   void setRevenueWeight(double revenue_weight);
+  double getOreMultiplier() const;
+  void setOreMultiplier(double ore_multiplier);
+  bool getRequireOres() const;
+  void setRequireOres(bool require_ores);
   double getTotalProduction() const;
   double getTotalRevenue() const;
   double getTotalStorage() const;
@@ -96,6 +108,7 @@ private:
   int getComboSize(size_t source) const;
   double getProbeBoost(size_t idx) const noexcept;
   double getProbeProduction(size_t idx) const noexcept;
+  double getProductionNodeMultiplier(size_t idx) const noexcept;
   double getProduction(size_t idx) const noexcept;
   double getProbeRevenue(size_t idx) const noexcept;
   double getRevenue(size_t idx) const noexcept;
@@ -116,6 +129,8 @@ private:
   double storage_weight_ = 1;
   double production_weight_ = 1;
   double revenue_weight_ = 1;
+  double ore_multiplier_ = 1;
+  bool require_ores_ = false;
 };
 
 #endif // XENOPROBES_PROBE_ARRANGEMENT_H

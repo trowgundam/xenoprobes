@@ -212,11 +212,15 @@ void ProbeOptimizer::doHillClimbing(const ProgressCallback& progressCallback,
       "  storage weight   = {storageWeight: 6}\n"
       "  revenue weight   = {revenueWeight: 6}\n"
       "  production weight= {productionWeight: 6}\n"
+      "  ore multiplier   = {oreMultiplier: 6}\n"
+      "  require ores     = {requireOres: >6}\n"
       "  iterations={maxIterations}  offsprings={numOffsprings}"
       "  mutation={mutationRate}  age={maxAge}  population={maxPopSize}",
       fmt::arg("storageWeight", setup_.getStorageWeight()),
       fmt::arg("revenueWeight", setup_.getRevenueWeight()),
       fmt::arg("productionWeight", setup_.getProductionWeight()),
+      fmt::arg("oreMultiplier", setup_.getOreMultiplier()),
+      fmt::arg("requireOres", setup_.getRequireOres()),
       fmt::arg("maxIterations", maxIterations_),
       fmt::arg("numOffsprings", numOffsprings_),
       fmt::arg("mutationRate", mutationRate_), fmt::arg("maxAge", maxAge_),
@@ -308,6 +312,14 @@ void ProbeOptimizer::setRevenueWeight(float revenueWeight) {
 
 void ProbeOptimizer::setProductionWeight(float productionWeight) {
   setup_.setProductionWeight(productionWeight);
+}
+
+void ProbeOptimizer::setOreMultiplier(float oreMultiplier) {
+  setup_.setOreMultiplier(oreMultiplier);
+}
+
+void ProbeOptimizer::setRequireOres(bool requireOres) {
+  setup_.setRequireOres(requireOres);
 }
 
 void ProbeOptimizer::setMutationRate(float mutationRate) {

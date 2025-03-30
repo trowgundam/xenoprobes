@@ -77,9 +77,15 @@ double ProbeArrangement::evaluate() const {
   double totalRev = 0;
   double totalStorage = 6000;
   for (size_t i = 0; i < ProbeOptimizer::getSites().size(); ++i) {
-    totalProd += getProduction(i);
+    totalProd += getProduction(i) * getProductionNodeMultiplier(i);
     totalRev += getRevenue(i);
     totalStorage += getStorage(i);
+  }
+
+  if (require_ores_) {
+    const auto ores = getOres();
+    if (ores.size() < Ore::ALL.size())
+      return 0;
   }
 
   return totalStorage * storage_weight_ + totalRev * revenue_weight_ +
@@ -157,6 +163,10 @@ double ProbeArrangement::getProductionWeight() const {
 
 double ProbeArrangement::getRevenueWeight() const { return revenue_weight_; }
 
+double ProbeArrangement::getOreMultiplier() const { return ore_multiplier_; }
+
+bool ProbeArrangement::getRequireOres() const { return require_ores_; }
+
 void ProbeArrangement::setStorageWeight(double storage_weight) {
   storage_weight_ = storage_weight;
 }
@@ -167,6 +177,14 @@ void ProbeArrangement::setProductionWeight(double production_weight) {
 
 void ProbeArrangement::setRevenueWeight(double revenue_weight) {
   revenue_weight_ = revenue_weight;
+}
+
+void ProbeArrangement::setOreMultiplier(double ore_multiplier) {
+  ore_multiplier_ = ore_multiplier;
+}
+
+void ProbeArrangement::setRequireOres(bool require_ores) {
+  require_ores_ = require_ores;
 }
 
 size_t ProbeArrangement::getSize() const { return probes_.size(); }
@@ -334,6 +352,18 @@ double ProbeArrangement::getProbeProduction(size_t idx) const noexcept {
   }
 
   return probeRate + dupeStash;
+}
+
+double
+ProbeArrangement::getProductionNodeMultiplier(size_t idx) const noexcept {
+  const auto probe = probes_[idx];
+  if (probe->category != Probe::Category::Mining)
+    return 1;
+  const auto site = Site::fromName(ProbeOptimizer::getSiteIdForIndex(idx));
+  const auto &ore = site->getOre();
+  if (ore.size() > 0)
+    return ore_multiplier_;
+  return 1;
 }
 
 double ProbeArrangement::getProduction(size_t idx) const noexcept {

@@ -59,6 +59,8 @@ public:
   void setMaxAge(int maxAge);
   void setMaxThreads(size_t threads);
   void setProbeAt(Site::Ptr site, Probe::Ptr probe);
+  void setOreMultiplier(float setOreMultiplier);
+  void setRequireOres(bool require_ores);
 
   static void handleSIGINT(int);
   static void requestStop();
