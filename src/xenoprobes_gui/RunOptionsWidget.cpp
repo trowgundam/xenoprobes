@@ -52,8 +52,16 @@ RunOptionsWidget::RunOptionsWidget(QWidget *parent)
           &RunOptionsWidget::settingsChanged);
   layout->addWidget(new QLabel(tr("Require Ores:"), this));
   layout->addWidget(requireOres_);
-  connect(requireOres_, &QCheckBox::checkStateChanged, this,
-          &RunOptionsWidget::settingsChanged);
+
+  connect(requireOres_,
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+    &QCheckBox::checkStateChanged,
+#else
+    &QCheckBox::stateChanged,
+#endif
+    this,
+    &RunOptionsWidget::settingsChanged);
+
   layout->addWidget(new QLabel(tr("Iterations:"), this));
   layout->addWidget(iterations_);
   iterations_->setMinimum(1);
