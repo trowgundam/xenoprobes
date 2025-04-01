@@ -19,6 +19,8 @@ void SolverRunner::run() {
   probeOptimizer_->setStorageWeight(runOptions_.storageWeight);
   probeOptimizer_->setRevenueWeight(runOptions_.revenueWeight);
   probeOptimizer_->setProductionWeight(runOptions_.productionWeight);
+  probeOptimizer_->setOreMultiplier(runOptions_.oreMultiplier);
+  probeOptimizer_->setRequireOres(runOptions_.requireOres);
   probeOptimizer_->setMaxIterations(runOptions_.iterations);
   probeOptimizer_->setNumOffsprings(runOptions_.offsprings);
   probeOptimizer_->setMutationRate(runOptions_.mutation / 100.0);

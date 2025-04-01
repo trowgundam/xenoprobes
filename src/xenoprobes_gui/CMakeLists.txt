@@ -5,33 +5,35 @@ endif ()
 
 qt_add_executable(${PROJECT_NAME}_gui ${WIN32_OPTION}
         ${PROJECT_SOURCE_DIR}/resources/resources.qrc
-        AboutDialog.h
         AboutDialog.cpp
+        AboutDialog.h
         DataProbe.cpp
         DataProbe.h
+        DoubleSliderWithValWidget.cpp
+        DoubleSliderWithValWidget.h
         FnSiteWidget.cpp
         FnSiteWidget.h
-        InventoryLoader.h
         InventoryLoader.cpp
-        InventoryModel.h
+        InventoryLoader.h
         InventoryModel.cpp
+        InventoryModel.h
         MainWindow.cpp
         MainWindow.h
         MiraMap.cpp
         MiraMap.h
-        RunOptionsWidget.h
         RunOptionsWidget.cpp
+        RunOptionsWidget.h
         SiteListLoader.cpp
         SiteListLoader.h
-        SliderWithValWidget.h
         SliderWithValWidget.cpp
-        SolutionWidget.h
+        SliderWithValWidget.h
         SolutionWidget.cpp
-        SolverRunner.h
+        SolutionWidget.h
         SolverRunner.cpp
-        themeIcon.h
-        themeIcon.cpp
+        SolverRunner.h
         main.cpp
+        themeIcon.cpp
+        themeIcon.h
 )
 
 # Application icon

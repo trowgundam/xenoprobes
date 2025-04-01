@@ -9,10 +9,14 @@
 #ifndef RUNOPTIONSWIDGET_H
 #define RUNOPTIONSWIDGET_H
 
-#include "SliderWithValWidget.h"
+#include <QCheckBox>
+
 #include <QJsonValue>
 #include <QWidget>
+
+#include "DoubleSliderWithValWidget.h"
 #include "RunOptions.h"
+#include "SliderWithValWidget.h"
 
 class RunOptionsWidget : public QWidget {
   Q_OBJECT
@@ -24,49 +28,65 @@ public:
   explicit RunOptionsWidget(QWidget *parent = nullptr);
   [[nodiscard]] RunOptions options() const {
     return {
-        .storageWeight = storageWeight_->value(),
-        .revenueWeight = revenueWeight_->value(),
-        .productionWeight = productionWeight_->value(),
-        .iterations = iterations_->value(),
-        .population = population_->value(),
-        .offsprings = offsprings_->value(),
-        .mutation = mutation_->value(),
-        .threads = threads_->value(),
+        .storageWeight = storageWeight(),
+        .revenueWeight = revenueWeight(),
+        .productionWeight = productionWeight(),
+        .oreMultiplier = oreMultiplier(),
+        .requireOres = requireOres(),
+        .iterations = iterations(),
+        .population = population(),
+        .offsprings = offsprings(),
+        .mutation = mutation(),
+        .threads = threads(),
     };
   }
   void setOptions(const RunOptions &options) {
-    storageWeight_->setValue(options.storageWeight);
-    revenueWeight_->setValue(options.revenueWeight);
-    productionWeight_->setValue(options.productionWeight);
-    iterations_->setValue(options.iterations);
-    population_->setValue(options.population);
-    offsprings_->setValue(options.offsprings);
-    mutation_->setValue(options.mutation);
-    threads_->setValue(options.threads);
+    setStorageWeight(options.storageWeight);
+    setRevenueWeight(options.revenueWeight);
+    setProductionWeight(options.productionWeight);
+    setOreMultiplier(options.oreMultiplier);
+    setRequireOres(options.requireOres);
+    setIterations(options.iterations);
+    setPopulation(options.population);
+    setOffsprings(options.offsprings);
+    setMutation(options.mutation);
+    setThreads(options.threads);
   }
-  [[nodiscard]] unsigned int storageWeight() { return storageWeight_->value(); }
+  [[nodiscard]] int storageWeight() const { return storageWeight_->value(); }
   void setStorageWeight(int storageWeight) {
     storageWeight_->setValue(storageWeight);
   }
-  [[nodiscard]] unsigned int revenueWeight() { return revenueWeight_->value(); }
+  [[nodiscard]] int revenueWeight() const { return revenueWeight_->value(); }
   void setRevenueWeight(int revenueWeight) {
     revenueWeight_->setValue(revenueWeight);
   }
-  [[nodiscard]] unsigned int productionWeight() {
+  [[nodiscard]] int productionWeight() const {
     return productionWeight_->value();
   }
   void setProductionWeight(int productionWeight) {
     productionWeight_->setValue(productionWeight);
   }
-  [[nodiscard]] unsigned int iterations() { return iterations_->value(); }
+  [[nodiscard]] double oreMultiplier() const {
+    return oreMultiplier_->value();
+  }
+  void setOreMultiplier(double oreMultiplier) {
+    oreMultiplier_->setValue(oreMultiplier);
+  }
+  [[nodiscard]] bool requireOres() const {
+    return requireOres_->checkState() == Qt::Checked;
+  }
+  void setRequireOres(bool requireOres) {
+    requireOres_->setCheckState(requireOres ? Qt::Checked : Qt::Unchecked);
+  }
+  [[nodiscard]] int iterations() const { return iterations_->value(); }
   void setIterations(int iterations) { iterations_->setValue(iterations); }
-  [[nodiscard]] unsigned int population() { return population_->value(); }
+  [[nodiscard]] int population() const { return population_->value(); }
   void setPopulation(int population) { population_->setValue(population); }
-  [[nodiscard]] unsigned int offsprings() { return offsprings_->value(); }
+  [[nodiscard]] int offsprings() const { return offsprings_->value(); }
   void setOffsprings(int offsprings) { offsprings_->setValue(offsprings); }
-  [[nodiscard]] unsigned int mutation() { return mutation_->value(); }
+  [[nodiscard]] int mutation() const { return mutation_->value(); }
   void setMutation(int mutation) { mutation_->setValue(mutation); }
-  [[nodiscard]] unsigned int threads() { return threads_->value(); }
+  [[nodiscard]] int threads() const { return threads_->value(); }
   void setThreads(int threads) { threads_->setValue(threads); }
 
 Q_SIGNALS:
@@ -84,6 +104,8 @@ private:
   SliderWithValWidget *offsprings_;
   SliderWithValWidget *mutation_;
   SliderWithValWidget *threads_;
+  DoubleSliderWithValWidget *oreMultiplier_;
+  QCheckBox *requireOres_;
 };
 
 #endif // RUNOPTIONSWIDGET_H

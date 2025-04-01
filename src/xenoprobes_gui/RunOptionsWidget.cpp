@@ -21,7 +21,10 @@ RunOptionsWidget::RunOptionsWidget(QWidget *parent)
       population_(new SliderWithValWidget(this)),
       offsprings_(new SliderWithValWidget(this)),
       mutation_(new SliderWithValWidget(this)),
-      threads_(new SliderWithValWidget(this)) {
+      threads_(new SliderWithValWidget(this)),
+      oreMultiplier_(new DoubleSliderWithValWidget(this)),
+      requireOres_(new QCheckBox(this))
+{
   auto *layout = new QVBoxLayout(this);
   layout->addWidget(new QLabel(tr("Storage Weight:"), this));
   layout->addWidget(storageWeight_);
@@ -40,6 +43,16 @@ RunOptionsWidget::RunOptionsWidget(QWidget *parent)
   productionWeight_->setMinimum(0);
   productionWeight_->setMaximum(1000);
   connect(productionWeight_, &SliderWithValWidget::valueChanged, this,
+          &RunOptionsWidget::settingsChanged);
+  layout->addWidget(new QLabel(tr("Ore Multiplier:"), this));
+  layout->addWidget(oreMultiplier_);
+  oreMultiplier_->setMinimum(0.0);
+  oreMultiplier_->setMaximum(10);
+  connect(oreMultiplier_, &DoubleSliderWithValWidget::valueChanged, this,
+          &RunOptionsWidget::settingsChanged);
+  layout->addWidget(new QLabel(tr("Require Ores:"), this));
+  layout->addWidget(requireOres_);
+  connect(requireOres_, &QCheckBox::checkStateChanged, this,
           &RunOptionsWidget::settingsChanged);
   layout->addWidget(new QLabel(tr("Iterations:"), this));
   layout->addWidget(iterations_);
@@ -80,20 +93,19 @@ RunOptionsWidget::RunOptionsWidget(QWidget *parent)
           &RunOptionsWidget::applyDefaultValues);
 
   // Match spinbox widths for aesthetics.
-  const auto allWidgets = {
-      storageWeight_, revenueWeight_, productionWeight_, iterations_,
-      population_,    offsprings_,    mutation_,         threads_,
+  const std::vector<QAbstractSpinBox*> allWidgets = {
+    storageWeight_->spinBox(), revenueWeight_->spinBox(), productionWeight_->spinBox(), iterations_->spinBox(),
+    population_->spinBox(), offsprings_->spinBox(), mutation_->spinBox(), threads_->spinBox(), oreMultiplier_->spinBox()
   };
   const auto maxWidth =
       std::ranges::max(allWidgets,
-                       [](SliderWithValWidget *lhs, SliderWithValWidget *rhs) {
-                         return lhs->spinBox()->width() <
-                                rhs->spinBox()->width();
+                       [](QAbstractSpinBox *lhs, QAbstractSpinBox *rhs) {
+                         return lhs->width() <
+                                rhs->width();
                        })
-          ->spinBox()
           ->width();
   for (auto *widget : allWidgets) {
-    widget->spinBox()->setMinimumWidth(maxWidth);
+    widget->setMinimumWidth(maxWidth);
   }
 }
 
@@ -102,6 +114,8 @@ QJsonValue RunOptionsWidget::optionsToJson(const RunOptions &options) {
   json["storageWeight"] = options.storageWeight;
   json["revenueWeight"] = options.revenueWeight;
   json["productionWeight"] = options.productionWeight;
+  json["oreMultiplier"] = options.oreMultiplier;
+  json["requireOres"] = options.requireOres;
   json["iterations"] = options.iterations;
   json["population"] = options.population;
   json["offsprings"] = options.offsprings;
@@ -136,6 +150,18 @@ RunOptions RunOptionsWidget::optionsFromJson(const QJsonValue &json) {
   }
   options.productionWeight = json["productionWeight"].toInt();
 
+  if (!jsonObj.contains("oreMultiplier") ||
+    !jsonObj["oreMultiplier"].isDouble()) {
+    throw std::runtime_error("Bad oreMultiplier");
+  }
+  options.oreMultiplier = json["oreMultiplier"].toDouble();
+
+  if (!jsonObj.contains("requireOres") ||
+    !jsonObj["requireOres"].isBool()) {
+    throw std::runtime_error("Bad requireOres");
+  }
+  options.requireOres = json["requireOres"].toBool();
+
   if (!jsonObj.contains("iterations") || !jsonObj["iterations"].isDouble()) {
     throw std::runtime_error("Bad iterations");
   }
@@ -166,12 +192,14 @@ RunOptions RunOptionsWidget::optionsFromJson(const QJsonValue &json) {
 
 void RunOptionsWidget::applyDefaultValues() {
   const RunOptions defaults;
-  storageWeight_->setValue(defaults.storageWeight);
-  revenueWeight_->setValue(defaults.revenueWeight);
-  productionWeight_->setValue(defaults.productionWeight);
-  iterations_->setValue(defaults.iterations);
-  population_->setValue(defaults.population);
-  offsprings_->setValue(defaults.offsprings);
-  mutation_->setValue(defaults.mutation);
-  threads_->setValue(defaults.threads);
+  setStorageWeight(defaults.storageWeight);
+  setRevenueWeight(defaults.revenueWeight);
+  setProductionWeight(defaults.productionWeight);
+  setOreMultiplier(defaults.oreMultiplier);
+  setRequireOres(defaults.requireOres);
+  setIterations(defaults.iterations);
+  setPopulation(defaults.population);
+  setOffsprings(defaults.offsprings);
+  setMutation(defaults.mutation);
+  setThreads(defaults.threads);
 }

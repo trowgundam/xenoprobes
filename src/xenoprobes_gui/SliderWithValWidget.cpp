@@ -11,8 +11,10 @@
 #include <QHBoxLayout>
 
 SliderWithValWidget::SliderWithValWidget(QWidget *parent)
-    : QWidget(parent), slider_(new QSlider(Qt::Horizontal, this)),
-      spinBox_(new QSpinBox(this)) {
+: QWidget(parent)
+, slider_(new QSlider(Qt::Horizontal, this))
+, spinBox_(new QSpinBox(this))
+{
   auto *layout = new QHBoxLayout(this);
   layout->addWidget(slider_);
   layout->addWidget(spinBox_);

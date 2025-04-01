@@ -14,6 +14,8 @@ struct RunOptions {
   int storageWeight = 1000;
   int revenueWeight = 10;
   int productionWeight = 1;
+  double oreMultiplier = 1.0;
+  bool requireOres = false;
   int iterations = 2000;
   int population = 200;
   int offsprings = 100;
