@@ -47,7 +47,7 @@ RunOptionsWidget::RunOptionsWidget(QWidget *parent)
   layout->addWidget(new QLabel(tr("Ore Multiplier:"), this));
   layout->addWidget(oreMultiplier_);
   oreMultiplier_->setMinimum(0.0);
-  oreMultiplier_->setMaximum(10);
+  oreMultiplier_->setMaximum(1000);
   connect(oreMultiplier_, &DoubleSliderWithValWidget::valueChanged, this,
           &RunOptionsWidget::settingsChanged);
   layout->addWidget(new QLabel(tr("Require Ores:"), this));
