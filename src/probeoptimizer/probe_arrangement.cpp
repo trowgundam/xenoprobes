@@ -357,7 +357,8 @@ double ProbeArrangement::getProbeProduction(size_t idx) const noexcept {
 double
 ProbeArrangement::getProductionNodeMultiplier(size_t idx) const noexcept {
   const auto probe = probes_[idx];
-  if (probe->category != Probe::Category::Mining)
+  if (probe->category != Probe::Category::Mining &&
+      probe->category != Probe::Category::Duplicator)
     return 1;
   const auto site = Site::fromName(ProbeOptimizer::getSiteIdForIndex(idx));
   const auto &ore = site->getOre();
