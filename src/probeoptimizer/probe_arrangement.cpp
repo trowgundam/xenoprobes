@@ -357,10 +357,24 @@ double ProbeArrangement::getProbeProduction(size_t idx) const noexcept {
 double
 ProbeArrangement::getProductionNodeMultiplier(size_t idx) const noexcept {
   const auto probe = probes_[idx];
-  if (probe->category != Probe::Category::Mining &&
-      probe->category != Probe::Category::Duplicator)
-    return 1;
   const auto site = Site::fromName(ProbeOptimizer::getSiteIdForIndex(idx));
+  bool isMining = false;
+  if (probe->category != Probe::Category::Duplicator) {
+    double dupeStash = 0; // things that don't get boosted
+    if (probe->category == Probe::Category::Duplicator) {
+      for (auto neighbor : site->getNeighbors()) {
+        const auto nidx = ProbeOptimizer::getIndexForSiteId(neighbor->name);
+        const auto neighborProbe = probes_[nidx];
+        if (neighborProbe->category == Probe::Category::Mining) {
+          isMining = true;
+          break;
+        }
+      }
+    }
+  } else if (probe->category == Probe::Category::Mining)
+    isMining = true;
+  if (!isMining)
+    return 1;
   const auto &ore = site->getOre();
   if (ore.size() > 0)
     return ore_multiplier_;
